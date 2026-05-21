@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>토스증권 금융투자협회 추천과정</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#f7f8fa;--surface:#fff;--surface2:#f0f3f7;--border:#e5eaf2;
+    --blue:#3182f6;--blue-light:#ebf3ff;--teal:#00b893;--purple:#8b5cf6;
+    --orange:#f59e0b;--red:#ef4444;
+    --text:#191f28;--text2:#6b7684;--text3:#b0bac5;
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Pretendard',sans-serif;min-height:100vh}
+
+  .hero{background:linear-gradient(135deg,#1249a0 0%,#1b64da 50%,#2563eb 100%);padding:56px 24px 48px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;top:-100px;right:-60px;width:420px;height:420px;background:radial-gradient(circle,rgba(255,255,255,.12) 0%,transparent 65%);border-radius:50%}
+  .hero::after{content:'';position:absolute;bottom:-80px;left:5%;width:320px;height:320px;background:radial-gradient(circle,rgba(255,255,255,.07) 0%,transparent 65%);border-radius:50%}
+  .hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:1}
+  .hero-eyebrow{font-size:12px;font-weight:600;color:rgba(255,255,255,.7);letter-spacing:.5px;margin-bottom:14px;text-transform:uppercase}
+  .hero h1{font-size:30px;font-weight:800;line-height:1.3;margin-bottom:10px;color:#fff}
+  .hero p{color:rgba(255,255,255,.75);font-size:14px;line-height:1.7}
+  .hero-stats{display:flex;gap:12px;margin-top:32px;flex-wrap:wrap}
+  .stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px);border-radius:14px;padding:16px 22px;flex:1;min-width:110px}
+  .stat-label{font-size:11px;color:rgba(255,255,255,.6);font-weight:500;margin-bottom:6px}
+  .stat-num{font-size:22px;font-weight:800;color:#fff}
+
+  .tab-wrap{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+  .tabs{display:flex;overflow-x:auto;max-width:900px;margin:0 auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex-shrink:0;padding:14px 18px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+  .tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .tab:hover:not(.active){color:var(--text2)}
+
+  .content{max-width:900px;margin:0 auto;padding:28px 16px 60px}
+  .section{display:none}
+  .section.active{display:block}
+  .section-header{margin-bottom:20px}
+  .section-title{font-size:18px;font-weight:800;margin-bottom:4px}
+  .section-desc{font-size:13px;color:var(--text2)}
+
+  .subcat-wrap{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .subcat{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);color:var(--text2);background:var(--surface);transition:all .2s}
+  .subcat.active,.subcat:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+  /* Card */
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:all .22s;text-decoration:none;color:inherit;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 10px 28px rgba(49,130,246,.13)}
+
+  /* Thumbnail */
+  .card-thumb{width:100%;height:148px;object-fit:cover;display:block;background:var(--surface2)}
+  .card-thumb-wrap{position:relative;overflow:hidden;height:148px;background:var(--surface2)}
+  .card-thumb-wrap img{width:100%;height:100%;object-fit:cover;transition:transform .3s}
+  .card:hover .card-thumb-wrap img{transform:scale(1.04)}
+  .card-thumb-badge{position:absolute;top:10px;left:10px}
+  .card-tag{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:.3px;backdrop-filter:blur(6px)}
+  .tag-blue{background:rgba(49,130,246,.85);color:#fff}
+  .tag-teal{background:rgba(0,184,147,.85);color:#fff}
+  .tag-purple{background:rgba(139,92,246,.85);color:#fff}
+  .tag-orange{background:rgba(245,158,11,.85);color:#fff}
+  .tag-red{background:rgba(239,68,68,.85);color:#fff}
+
+  .card-body{padding:16px;flex:1;display:flex;flex-direction:column}
+  .card-sub{font-size:10px;color:var(--text3);font-weight:500;margin-bottom:6px}
+  .card-title{font-size:14px;font-weight:700;line-height:1.45;margin-bottom:7px;color:var(--text)}
+  .card-desc{font-size:12px;color:var(--text2);line-height:1.55;margin-bottom:14px;flex:1}
+  .card-meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .meta-pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:6px;background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+  .meta-pill.highlight{color:var(--teal);border-color:#b2eed9;background:#e6faf5}
+  .meta-pill.required{color:var(--blue);border-color:#c3d9fd;background:var(--blue-light)}
+
+  .notice{background:var(--blue-light);border:1px solid #c3d9fd;border-radius:12px;padding:14px 18px;margin-bottom:20px;font-size:12px;color:#2563a8;line-height:1.7}
+  .notice strong{color:var(--blue)}
+  .empty{text-align:center;padding:60px 20px;color:var(--text3)}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">Toss Securities × KIFIN</div>
+    <h1>토스증권<br>금융투자협회 추천과정</h1>
+    <p>금융투자협회 집합교육 과정 중 토스증권 직원에게<br>추천하는 핵심 역량 강화 커리큘럼입니다.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-label">교육 유형</div><div class="stat-num">집합</div></div>
+      <div class="stat"><div class="stat-label">분류 카테고리</div><div class="stat-num">8개</div></div>
+      <div class="stat"><div class="stat-label">추천과정</div><div class="stat-num" id="total-count">0개</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-wrap">
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-sec="all">전체</div>
+    <div class="tab" data-sec="ib">기업금융</div>
+    <div class="tab" data-sec="wm">자산관리</div>
+    <div class="tab" data-sec="am">자산운용</div>
+    <div class="tab" data-sec="sales">영업지원</div>
+    <div class="tab" data-sec="mgmt">경영 일반</div>
+    <div class="tab" data-sec="product">금융 상품</div>
+    <div class="tab" data-sec="cert">자격/의무</div>
+    <div class="tab" data-sec="global">Global</div>
+  </div>
+</div>
+
+<div class="content">
+  <div class="section active" id="sec-all">
+    <div class="notice"><strong>📌 수강 신청 방법</strong><br>금융투자교육원(<strong>kifin.or.kr</strong>) 접속 → 집합 과정 검색 → 수강신청. 고용보험 환급 과정 여부는 개별 과정 상세 페이지에서 확인하세요.</div>
+    <div class="section-header"><div class="section-title">전체 추천과정</div><div class="section-desc">기업금융 · 자산관리 · 자산운용 · 영업지원 · 경영 일반 · 금융 상품 · 자격/의무 · Global</div></div>
+    <div class="card-grid" id="all-grid"></div>
+  </div>
+  <div class="section" id="sec-ib">
+    <div class="section-header"><div class="section-title">🏢 기업금융</div><div class="section-desc">ECM · DCM · M&A · IB 전반</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="ECM">ECM</div><div class="subcat" data-filter="DCM">DCM</div><div class="subcat" data-filter="M&A">M&A</div><div class="subcat" data-filter="IB전반">IB 전반</div></div>
+    <div class="card-grid" id="ib-grid"></div>
+  </div>
+  <div class="section" id="sec-wm">
+    <div class="section-header"><div class="section-title">💰 자산관리</div><div class="section-desc">연금 · 자산설계</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="연금">연금</div><div class="subcat" data-filter="자산설계">자산설계</div></div>
+    <div class="card-grid" id="wm-grid"></div>
+  </div>
+  <div class="section" id="sec-am">
+    <div class="section-header"><div class="section-title">📈 자산운용</div><div class="section-desc">주식 · 채권 · 대체투자 · 사모펀드 · 해외투자</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="주식">주식</div><div class="subcat" data-filter="채권">채권</div><div class="subcat" data-filter="대체투자">대체투자</div><div class="subcat" data-filter="사모펀드">사모펀드</div><div class="subcat" data-filter="해외투자">해외투자</div></div>
+    <div class="card-grid" id="am-grid"></div>
+  </div>
+  <div class="section" id="sec-sales">
+    <div class="section-header"><div class="section-title">⚙️ 영업지원</div><div class="section-desc">법규·제도 · 리스크 관리 · 투자분석 · 회계 · 신용평가 · 산업분석</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="법규제도">법규·제도</div><div class="subcat" data-filter="리스크관리">리스크 관리</div><div class="subcat" data-filter="투자분석">투자분석</div><div class="subcat" data-filter="회계">회계</div><div class="subcat" data-filter="신용평가">신용평가</div><div class="subcat" data-filter="산업분석">산업분석</div></div>
+    <div class="card-grid" id="sales-grid"></div>
+  </div>
+  <div class="section" id="sec-mgmt">
+    <div class="section-header"><div class="section-title">💡 경영 일반</div><div class="section-desc">4차산업 · 경영 경제</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="4차산업">4차산업</div><div class="subcat" data-filter="경영경제">경영 경제</div></div>
+    <div class="card-grid" id="mgmt-grid"></div>
+  </div>
+  <div class="section" id="sec-product">
+    <div class="section-header"><div class="section-title">🪙 금융 상품</div><div class="section-desc">증권 · 파생상품 · 신탁상품 · 펀드형 상품 · 금융상품 전반</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="증권">증권</div><div class="subcat" data-filter="파생상품">파생상품</div><div class="subcat" data-filter="신탁상품">신탁상품</div><div class="subcat" data-filter="펀드">펀드형 상품</div><div class="subcat" data-filter="금융상품전반">금융상품 전반</div></div>
+    <div class="card-grid" id="product-grid"></div>
+  </div>
+  <div class="section" id="sec-cert">
+    <div class="section-header"><div class="section-title">📋 자격/의무</div><div class="section-desc">자격 · 등록 · 보수</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="자격">자격</div><div class="subcat" data-filter="등록">등록</div><div class="subcat" data-filter="보수">보수</div></div>
+    <div class="card-grid" id="cert-grid"></div>
+  </div>
+  <div class="section" id="sec-global">
+    <div class="section-header"><div class="section-title">🌏 Global</div><div class="section-desc">해외연수 · Global 세미나</div></div>
+    <div class="subcat-wrap"><div class="subcat active" data-filter="all">전체</div><div class="subcat" data-filter="해외연수">해외연수</div><div class="subcat" data-filter="세미나">Global 세미나</div></div>
+    <div class="card-grid" id="global-grid"></div>
+  </div>
+</div>
+
+<script>
+// Unsplash source IDs per course keyword
+const COURSES = [
+  {sec:'ib',sub:'ECM',tag:'기업금융',color:'tag-blue',title:'주식자본시장(ECM) 실무과정',desc:'IPO, 유상증자 등 ECM 딜 프로세스 전반을 실무 중심으로 학습합니다.',duration:'2일',level:'중급',recommend:'★ 추천',img:'stock-market-trading',unsplash:'1611974789855-9c2a0a7236a3'},
+  {sec:'ib',sub:'ECM',tag:'기업금융',color:'tag-blue',title:'공모주 투자분석 실전과정',desc:'공모 기업 가치평가 방법론과 청약 전략을 심화 학습합니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1590283603385-17ffb3a7f29f'},
+  {sec:'ib',sub:'DCM',tag:'기업금융',color:'tag-blue',title:'채권발행시장(DCM) 전문과정',desc:'회사채·ABS 발행 구조, 수요예측 프로세스 등 DCM 핵심 실무를 다룹니다.',duration:'2일',level:'고급',recommend:'★ 추천',unsplash:'1560520653-9e0e4c89eb11'},
+  {sec:'ib',sub:'M&A',tag:'기업금융',color:'tag-blue',title:'M&A 딜 프로세스 실무',desc:'M&A 전략 수립부터 실사(Due Diligence), 계약까지 전 과정을 학습합니다.',duration:'2일',level:'고급',recommend:'★ 추천',unsplash:'1521791136064-7986c2920216'},
+  {sec:'ib',sub:'IB전반',tag:'기업금융',color:'tag-blue',title:'IB 입문과정',desc:'투자은행 업무 전반(ECM/DCM/M&A)을 이해하고 커리어 방향을 설계합니다.',duration:'1일',level:'입문',recommend:'',unsplash:'1486406146926-c627a92ad1ab'},
+  {sec:'wm',sub:'연금',tag:'자산관리',color:'tag-teal',title:'연금 자산배분 전략과정',desc:'DC형 퇴직연금·IRP의 효과적인 자산배분 전략과 ETF 포트폴리오 구성을 학습합니다.',duration:'1일',level:'중급',recommend:'★ 추천',unsplash:'1579621970563-ebec7560ff3e'},
+  {sec:'wm',sub:'연금',tag:'자산관리',color:'tag-teal',title:'연금수령 세금 절세 전략',desc:'연금 수령 시 절세 전략과 과세 방법의 차이를 실무 사례로 학습합니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1554224155-6726b3ff858f'},
+  {sec:'wm',sub:'자산설계',tag:'자산관리',color:'tag-teal',title:'생애주기별 자산설계 실무',desc:'고객 라이프사이클 분석을 바탕으로 단계별 금융상품 제안 역량을 키웁니다.',duration:'2일',level:'중급',recommend:'★ 추천',unsplash:'1507679799987-c73779587ccf'},
+  {sec:'wm',sub:'자산설계',tag:'자산관리',color:'tag-teal',title:'고액자산가 상속·증여 전략',desc:'부동산·금융자산의 증여·상속세 절세 방안 및 신탁 활용 방법을 학습합니다.',duration:'1일',level:'고급',recommend:'',unsplash:'1560518883-ce09059eeffa'},
+  {sec:'am',sub:'주식',tag:'자산운용',color:'tag-purple',title:'가치투자 기업분석 심화',desc:'DCF·상대가치평가 모델을 활용한 기업 내재가치 분석 방법론을 학습합니다.',duration:'2일',level:'고급',recommend:'★ 추천',unsplash:'1642790106117-e829e14a795f'},
+  {sec:'am',sub:'채권',tag:'자산운용',color:'tag-purple',title:'채권 포트폴리오 운용 전략',desc:'금리 시나리오별 채권 포트폴리오 구성과 듀레이션 관리 전략을 학습합니다.',duration:'1일',level:'고급',recommend:'★ 추천',unsplash:'1611348586804-61bf6c080437'},
+  {sec:'am',sub:'대체투자',tag:'자산운용',color:'tag-purple',title:'부동산 대체투자 실무',desc:'리츠(REITs)·부동산 펀드 구조와 투자 수익률 분석 방법론을 다룹니다.',duration:'2일',level:'중급',recommend:'',unsplash:'1560448204-e02f11c3d0e2'},
+  {sec:'am',sub:'사모펀드',tag:'자산운용',color:'tag-purple',title:'사모펀드(PEF) 투자 실무',desc:'PEF 운용 구조, LP 투자 기준, 포트폴리오 회수 전략을 학습합니다.',duration:'1일',level:'고급',recommend:'★ 추천',unsplash:'1600880292203-757bb62b4baf'},
+  {sec:'am',sub:'해외투자',tag:'자산운용',color:'tag-purple',title:'글로벌 주식 투자 전략',desc:'미국·신흥국 시장의 주요 섹터 분석과 글로벌 자산배분 전략을 배웁니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1526304640581-d334cdbbf45e'},
+  {sec:'sales',sub:'법규제도',tag:'영업지원',color:'tag-orange',title:'금융투자업 규정 이해과정',desc:'자본시장법, 금융소비자보호법 등 금융투자업 핵심 규정을 실무 중심으로 학습합니다.',duration:'1일',level:'중급',recommend:'★ 추천',unsplash:'1589829545856-d10d557cf95f'},
+  {sec:'sales',sub:'리스크관리',tag:'영업지원',color:'tag-orange',title:'시장 리스크 관리 실무',desc:'VaR, 스트레스 테스트 등 시장 리스크 측정·관리 방법론을 학습합니다.',duration:'2일',level:'고급',recommend:'★ 추천',unsplash:'1551288049-bebda4e38f71'},
+  {sec:'sales',sub:'투자분석',tag:'영업지원',color:'tag-orange',title:'재무제표 분석과 투자활용',desc:'재무3표 독해 능력을 키우고 투자 의사결정에 실제로 적용하는 방법을 배웁니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1543286386-713bdd548da4'},
+  {sec:'sales',sub:'회계',tag:'영업지원',color:'tag-orange',title:'금융기관 회계 실무과정',desc:'금융상품 회계처리(IFRS9) 및 공정가치 측정 방법을 심화 학습합니다.',duration:'1일',level:'고급',recommend:'',unsplash:'1554224155-1a2c1c4c8a4e'},
+  {sec:'sales',sub:'신용평가',tag:'영업지원',color:'tag-orange',title:'회사채 신용분석 실무',desc:'기업 재무·비재무 요소를 종합한 신용등급 산정 프로세스를 학습합니다.',duration:'1일',level:'중급',recommend:'★ 추천',unsplash:'1450101499163-c8848c66ca85'},
+  {sec:'sales',sub:'산업분석',tag:'영업지원',color:'tag-orange',title:'주요 산업 섹터 분석',desc:'반도체·바이오·에너지 등 주요 산업의 구조와 투자 포인트를 분석합니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1518770660439-4636190af475'},
+  {sec:'mgmt',sub:'4차산업',tag:'경영 일반',color:'tag-teal',title:'AI·핀테크 트렌드와 금융산업',desc:'생성형 AI, 블록체인 등 4차 산업혁명 기술이 금융산업에 미치는 영향을 분석합니다.',duration:'1일',level:'입문',recommend:'★ 추천',unsplash:'1677442135703-1787eea5ce01'},
+  {sec:'mgmt',sub:'경영경제',tag:'경영 일반',color:'tag-teal',title:'글로벌 거시경제 해석과 투자',desc:'미국 FOMC, 환율, 인플레이션 등 주요 거시 지표의 해석과 투자 전략 연계를 학습합니다.',duration:'1일',level:'중급',recommend:'★ 추천',unsplash:'1535320903710-d993d3d77d29'},
+  {sec:'product',sub:'증권',tag:'금융 상품',color:'tag-red',title:'ETF 상품 구조와 투자 전략',desc:'국내외 ETF의 구조, 유형별 특성, 포트폴리오 활용 전략을 실무 중심으로 학습합니다.',duration:'1일',level:'중급',recommend:'★ 추천',unsplash:'1611974789855-9c2a0a7236a3'},
+  {sec:'product',sub:'파생상품',tag:'금융 상품',color:'tag-red',title:'파생상품 기초와 헤지 전략',desc:'선물·옵션·스왑의 구조와 가격결정, 실전 헤지 전략을 학습합니다.',duration:'2일',level:'중급',recommend:'★ 추천',unsplash:'1642543492481-44e81e3914a7'},
+  {sec:'product',sub:'신탁상품',tag:'금융 상품',color:'tag-red',title:'신탁상품 설계와 판매 실무',desc:'다양한 신탁 유형의 구조 이해와 고객 맞춤형 신탁 설계 역량을 키웁니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1521791055366-0d553872952f'},
+  {sec:'product',sub:'펀드',tag:'금융 상품',color:'tag-red',title:'공모펀드 판매 전문과정',desc:'공모펀드 유형, 성과 평가, 투자 설명 방법론을 학습합니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1559526324-593bc073d938'},
+  {sec:'product',sub:'금융상품전반',tag:'금융 상품',color:'tag-red',title:'WM 금융상품 종합 설계',desc:'예금·펀드·보험·연금·파생결합상품을 통합한 종합 자산관리 설계를 학습합니다.',duration:'2일',level:'고급',recommend:'★ 추천',unsplash:'1554224154-22dec7ec8818'},
+  {sec:'cert',sub:'자격',tag:'자격/의무',color:'tag-blue',title:'투자분석사 자격 대비과정',desc:'CFA 및 국내 투자분석사 자격시험 준비를 위한 핵심 이론·문제풀이 과정입니다.',duration:'3일',level:'고급',recommend:'★ 추천',unsplash:'1434030216411-0b793f4b4173'},
+  {sec:'cert',sub:'등록',tag:'자격/의무',color:'tag-blue',title:'금융투자전문인력 등록 교육',desc:'투자권유자문인력 등 금융투자전문인력 등록 요건 충족을 위한 의무 교육입니다.',duration:'1일',level:'필수',recommend:'★ 필수',required:true,unsplash:'1554224155-6726b3ff858f'},
+  {sec:'cert',sub:'보수',tag:'자격/의무',color:'tag-blue',title:'금융투자전문인력 보수 교육',desc:'금융투자전문인력 자격 유지를 위한 연간 보수 교육입니다.',duration:'0.5일',level:'필수',recommend:'★ 필수',required:true,unsplash:'1507679799987-c73779587ccf'},
+  {sec:'global',sub:'해외연수',tag:'Global',color:'tag-purple',title:'미국 월스트리트 연수과정',desc:'뉴욕 주요 금융기관 방문 및 글로벌 IB 실무자 네트워킹 프로그램입니다.',duration:'5일',level:'고급',recommend:'★ 추천',unsplash:'1485871851896-37a02a7b3357'},
+  {sec:'global',sub:'세미나',tag:'Global',color:'tag-purple',title:'글로벌 자산시장 세미나',desc:'해외 석학·실무자 초청 글로벌 자산시장 동향 및 투자 전략 세미나입니다.',duration:'1일',level:'중급',recommend:'',unsplash:'1587825140708-dfaf72ae4b04'},
+];
+
+document.getElementById('total-count').textContent = COURSES.length + '개';
+
+function imgUrl(id){
+  return `https://images.unsplash.com/photo-${id}?w=600&q=75&fit=crop&auto=format`;
+}
+
+function makeCard(c){
+  const pill = c.required
+    ? `<span class="meta-pill required">${c.recommend}</span>`
+    : c.recommend ? `<span class="meta-pill highlight">${c.recommend}</span>` : '';
+  return `<a class="card" href="https://www.kifin.or.kr/course/active/ol/list.do" target="_blank" rel="noopener">
+    <div class="card-thumb-wrap">
+      <img src="${imgUrl(c.unsplash)}" alt="${c.title}" loading="lazy" onerror="this.style.background='#e5eaf2';this.style.display='block'">
+      <div class="card-thumb-badge"><span class="card-tag ${c.color}">${c.tag}</span></div>
+    </div>
+    <div class="card-body">
+      <div class="card-sub">${c.sub}</div>
+      <div class="card-title">${c.title}</div>
+      <div class="card-desc">${c.desc}</div>
+      <div class="card-meta">
+        <span class="meta-pill">⏱ ${c.duration}</span>
+        <span class="meta-pill">${c.level}</span>
+        ${pill}
+      </div>
+    </div>
+  </a>`;
+}
+
+function renderGrid(id, list){
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.innerHTML = list.length ? list.map(makeCard).join('') : '<div class="empty">📭 해당 카테고리 추천과정을 준비 중입니다.</div>';
+}
+
+renderGrid('all-grid', COURSES);
+['ib','wm','am','sales','mgmt','product','cert','global'].forEach(k =>
+  renderGrid(`${k}-grid`, COURSES.filter(c=>c.sec===k))
+);
+
+document.getElementById('tabs').addEventListener('click', e=>{
+  const t = e.target.closest('.tab'); if(!t) return;
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+  document.getElementById('sec-'+t.dataset.sec).classList.add('active');
+});
+
+document.querySelectorAll('.subcat-wrap').forEach(wrap=>{
+  const sec = wrap.closest('.section').id.replace('sec-','');
+  wrap.addEventListener('click', e=>{
+    const pill = e.target.closest('.subcat'); if(!pill) return;
+    wrap.querySelectorAll('.subcat').forEach(x=>x.classList.remove('active'));
+    pill.classList.add('active');
+    const f = pill.dataset.filter;
+    const list = f==='all' ? COURSES.filter(c=>c.sec===sec) : COURSES.filter(c=>c.sec===sec&&c.sub===f);
+    renderGrid(`${sec}-grid`, list);
+  });
+});
+</script>
+</body>
+</html>
